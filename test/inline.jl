@@ -160,3 +160,10 @@ function f_ifelse(x)
 end
 # 2 for now because the compiler leaves a GotoNode around
 @test_broken length(code_typed(f_ifelse, (String,))[1][1].code) <= 2
+
+# Check that apply_type/TypeVar can be fully eliminated
+function f_apply_typevar(T)
+    NTuple{N, T} where N
+    return T
+end
+@test length(code_typed(f_apply_typevar, (Type{Any},))[1][1].code) == 1
