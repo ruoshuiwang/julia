@@ -432,3 +432,8 @@ end
     y = rand(UInt128)
     @test BigInt(y) % UInt128 === y
 end
+
+@testset "conversion from typemin($T)" for T in (Int8, Int16, Int32, Int64, Int128)
+    x = typemin(T)
+    @test big(x) == x
+end

@@ -287,7 +287,11 @@ function BigInt(x::Integer)
     nd = ndigits(x, base=2)
     z = MPZ.realloc2(nd)
     s = sign(x)
-    s == -1 && (x = -x)
+    if x isa Union{Int8,Int16,Int32,Int64,Int128} # two's complement
+        x = s == -1 ? Unsigned(~x) + one(x) : Unsigned(x)
+    else
+        s == -1 && (x = -x)
+    end
     size = 0
     limbnbits = sizeof(Limb) << 3
     while nd > 0
